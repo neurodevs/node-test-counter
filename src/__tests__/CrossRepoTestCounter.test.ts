@@ -1,4 +1,9 @@
-import AbstractSpruceTest, { test, assert } from '@sprucelabs/test-utils'
+import AbstractSpruceTest, {
+    test,
+    assert,
+    errorAssert,
+    generateId,
+} from '@sprucelabs/test-utils'
 import CrossRepoTestCounter, {
     TestCounter,
 } from '../modules/CrossRepoTestCounter'
@@ -15,6 +20,19 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     @test()
     protected static async createsCrossRepoTestCounterInstance() {
         assert.isTruthy(this.instance, 'Should create an instance!')
+    }
+
+    @test()
+    protected static async throwsIfRepoNotFound() {
+        const repoPath = generateId()
+
+        const err = await assert.doesThrowAsync(async () => {
+            await this.instance.countTestsIn([repoPath])
+        })
+
+        errorAssert.assertError(err, 'REPO_NOT_FOUND', {
+            repoPath,
+        })
     }
 
     private static CrossRepoTestCounter() {
