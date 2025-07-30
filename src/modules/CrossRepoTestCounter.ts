@@ -37,7 +37,23 @@ export default class CrossRepoTestCounter implements TestCounter {
         return results
     }
 
-    private async countTestsInFile(filePath: string): Promise<number> {
+    private async countTestsInRepo(repoPath: string) {
+        const files = await this.walk(repoPath)
+
+        const testFiles = files.filter((file) =>
+            this.EXTENSIONS.includes(path.extname(file))
+        )
+
+        let total = 0
+
+        for (const file of testFiles) {
+            total += await this.countTestsInFile(file)
+        }
+
+        return total
+    }
+
+    private async countTestsInFile(filePath: string) {
         const content = await fs.promises.readFile(filePath, 'utf-8')
 
         return this.TEST_PATTERNS.reduce((acc, regex) => {
@@ -56,22 +72,6 @@ export default class CrossRepoTestCounter implements TestCounter {
         )
 
         return files.flat()
-    }
-
-    private async countTestsInRepo(repoPath: string): Promise<number> {
-        const files = await this.walk(repoPath)
-
-        const testFiles = files.filter((file) =>
-            this.EXTENSIONS.includes(path.extname(file))
-        )
-
-        let total = 0
-
-        for (const file of testFiles) {
-            total += await this.countTestsInFile(file)
-        }
-
-        return total
     }
 }
 
