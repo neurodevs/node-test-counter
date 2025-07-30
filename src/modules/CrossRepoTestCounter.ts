@@ -39,6 +39,7 @@ export default class CrossRepoTestCounter implements TestCounter {
 
     private async countTestsInRepo(repoPath: string) {
         const files = await this.walk(repoPath)
+        const repoName = path.basename(repoPath)
 
         const testFiles = files.filter((file) =>
             this.EXTENSIONS.includes(path.extname(file))
@@ -47,7 +48,9 @@ export default class CrossRepoTestCounter implements TestCounter {
         let total = 0
 
         for (const file of testFiles) {
-            total += await this.countTestsInFile(file)
+            if (!file.split(repoName)[1].includes('testData')) {
+                total += await this.countTestsInFile(file)
+            }
         }
 
         return total

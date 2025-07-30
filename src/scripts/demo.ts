@@ -21,6 +21,7 @@ async function main() {
         '../node-server-plots/src',
         '../node-signal-processing/src',
         '../node-task-queue/src',
+        '../node-test-counter/src',
         '../node-xdf/src',
         '../personomic/src',
         '../react-connectivity-graphs/src',

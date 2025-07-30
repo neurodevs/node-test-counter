@@ -1,6 +1,6 @@
 import { test } from '@sprucelabs/test-utils'
 
-export default class TestModule1 {
+export default class ModuleWithOneTest {
     @test()
     protected static async test1() {}
 }
