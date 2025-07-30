@@ -14,7 +14,7 @@ export default class CrossRepoTestCounter implements TestCounter {
         return new (this.Class ?? this)()
     }
 
-    public async countTestsIn(repoPaths: string[]): Promise<TestCounterResult> {
+    public async countTestsIn(repoPaths: string[]) {
         const results: TestCounterResult = {
             total: 0,
             perRepo: {},
@@ -61,10 +61,10 @@ export default class CrossRepoTestCounter implements TestCounter {
         }, 0)
     }
 
-    private async walk(dir: string): Promise<string[]> {
+    private async walk(dir: string) {
         const entries = await fs.promises.readdir(dir, { withFileTypes: true })
 
-        const files = await Promise.all(
+        const files: string[][] = await Promise.all(
             entries.map((entry) => {
                 const res = path.resolve(dir, entry.name)
                 return entry.isDirectory() ? this.walk(res) : [res]
