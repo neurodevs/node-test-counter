@@ -35,6 +35,28 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
         })
     }
 
+    @test()
+    protected static async countsTestsInModules() {
+        const repoPaths = [
+            './src/__tests__/testData/repoOne',
+            './src/__tests__/testData/repoTwo',
+        ]
+
+        const result = await this.instance.countTestsIn(repoPaths)
+
+        assert.isEqualDeep(
+            result,
+            {
+                total: 6,
+                perRepo: {
+                    './src/__tests__/testData/repoOne': 1,
+                    './src/__tests__/testData/repoTwo': 5,
+                },
+            },
+            'Result is not expected!'
+        )
+    }
+
     private static CrossRepoTestCounter() {
         return CrossRepoTestCounter.Create()
     }

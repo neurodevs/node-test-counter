@@ -8,7 +8,7 @@ export default class SpruceError extends BaseSpruceError<ErrorOptions> {
         let message
         switch (options?.code) {
             case 'REPO_NOT_FOUND':
-                message = `Could not find repo "${options?.repoPath}"!`
+                message = `Could not find repo "${options?.repoPath}"! \n\n Original error: \n\n ${options?.originalError?.message} \n\n`
                 break
             default:
                 message = super.friendlyMessage()
