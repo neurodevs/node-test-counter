@@ -30,7 +30,7 @@ async function main() {
 
     const results = await instance.countTestsIn(repoPaths)
 
-    console.log('\n\nTest count results:\n\n', results, '\n\n')
+    console.log('\n\nTest counts across @neurodevs repos:\n\n', results, '\n\n')
 }
 
 main().catch((err) => {
