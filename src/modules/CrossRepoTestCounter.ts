@@ -6,7 +6,7 @@ export default class CrossRepoTestCounter implements TestCounter {
     public static Class?: TestCounterConstructor
 
     private TEST_PATTERNS = [/@test\(/g]
-    private EXTENSIONS = ['.ts']
+    private EXTENSIONS = ['.ts', '.tsx']
 
     protected constructor() {}
 
