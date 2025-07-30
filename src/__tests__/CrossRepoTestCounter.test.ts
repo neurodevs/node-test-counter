@@ -18,7 +18,7 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async createsCrossRepoTestCounterInstance() {
+    protected static async createsInstance() {
         assert.isTruthy(this.instance, 'Should create an instance!')
     }
 
