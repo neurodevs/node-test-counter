@@ -39,7 +39,7 @@ async function main() {
     }
 
     const sortedPerRepo = Object.fromEntries(
-        Object.entries(simplified).sort(([a], [b]) => a.localeCompare(b))
+        Object.entries(simplified).sort(([, a], [, b]) => b - a)
     )
 
     console.log('\n\nTest counts across @neurodevs repos:\n')
