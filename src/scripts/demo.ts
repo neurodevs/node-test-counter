@@ -1,3 +1,4 @@
+import path from 'path'
 import CrossRepoTestCounter from '../modules/CrossRepoTestCounter'
 
 async function main() {
@@ -8,7 +9,7 @@ async function main() {
         '../node-biosensors/src',
         '../node-ble/src',
         '../node-causality/src',
-        '../node-csv',
+        '../node-csv/src',
         '../node-eeg/src',
         '../node-file-checker/src',
         '../node-file-loader/src',
@@ -23,7 +24,6 @@ async function main() {
         '../node-task-queue/src',
         '../node-test-counter/src',
         '../node-xdf/src',
-        '../personomic/src',
         '../react-connectivity-graphs/src',
     ]
 
@@ -31,7 +31,20 @@ async function main() {
 
     const results = await instance.countTestsIn(repoPaths)
 
-    console.log('\n\nTest counts across @neurodevs repos:\n\n', results, '\n\n')
+    const simplified: Record<string, number> = {}
+
+    for (const [repoPath, count] of Object.entries(results.perRepo)) {
+        const name = path.basename(path.dirname(repoPath))
+        simplified[name] = count
+    }
+
+    const sortedPerRepo = Object.fromEntries(
+        Object.entries(simplified).sort(([a], [b]) => a.localeCompare(b))
+    )
+
+    console.log('\n\nTest counts across @neurodevs repos:\n')
+    console.log({ total: results.total, perRepo: sortedPerRepo })
+    console.log('\n')
 }
 
 main().catch((err) => {
