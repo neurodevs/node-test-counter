@@ -36,7 +36,7 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async countsTestsInModules() {
+    protected static async resultEqualsExpected() {
         const repoPaths = [
             './src/__tests__/testData/repoOne',
             './src/__tests__/testData/repoTwo',
