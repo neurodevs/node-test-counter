@@ -8,6 +8,8 @@ export default class CrossRepoTestCounter implements TestCounter {
     private TEST_PATTERNS = [/@test\(/g]
     private EXTENSIONS = ['.ts', '.tsx']
 
+    private currentRepoPath!: string
+
     protected constructor() {}
 
     public static Create() {
@@ -23,31 +25,30 @@ export default class CrossRepoTestCounter implements TestCounter {
         }
 
         for (const repoPath of repoPaths) {
-            try {
-                const count = await this.countTestsInRepo(
-                    repoPath,
-                    excludeNodeModules
-                )
-                results.perRepo[repoPath] = count
-                results.total += count
-            } catch (error: any) {
-                throw new SpruceError({
-                    code: 'REPO_NOT_FOUND',
-                    repoPath,
-                    originalError: error,
-                })
-            }
+            this.currentRepoPath = repoPath
+            this.throwIfRepoDoesNotExist()
+
+            const count = await this.countTestsInRepo(excludeNodeModules)
+
+            results.perRepo[repoPath] = count
+            results.total += count
         }
 
         return results
     }
 
-    private async countTestsInRepo(
-        repoPath: string,
-        excludeNodeModules: boolean
-    ) {
-        const files = await this.walk(repoPath)
-        const repoName = path.basename(repoPath)
+    private throwIfRepoDoesNotExist() {
+        if (!fs.existsSync(this.currentRepoPath)) {
+            throw new SpruceError({
+                code: 'REPO_NOT_FOUND',
+                repoPath: this.currentRepoPath,
+            })
+        }
+    }
+
+    private async countTestsInRepo(excludeNodeModules: boolean) {
+        const files = await this.walk(this.currentRepoPath)
+        const repoName = path.basename(this.currentRepoPath)
 
         let total = 0
 

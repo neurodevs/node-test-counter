@@ -26,14 +26,14 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
 
     @test()
     protected static async throwsIfRepoNotFound() {
-        const repoPath = generateId()
+        const invalidPath = generateId()
 
         const err = await assert.doesThrowAsync(async () => {
-            await this.instance.countTestsIn([repoPath])
+            await this.instance.countTestsIn([invalidPath])
         })
 
         errorAssert.assertError(err, 'REPO_NOT_FOUND', {
-            repoPath,
+            repoPath: invalidPath,
         })
     }
 
