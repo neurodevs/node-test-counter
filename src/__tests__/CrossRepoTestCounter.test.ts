@@ -51,13 +51,31 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
             './src/__tests__/testData/repoThree',
         ]
 
-        const result = await this.countTestsIn(repoPaths, {
-            excludeNodeModules: true,
-        })
+        const result = await this.countTestsIn(repoPaths)
 
         this.assertResultEqualsExpected(result, {
             './src/__tests__/testData/repoThree': 0,
         })
+    }
+
+    @test()
+    protected static async countsIfExcludeNodeModulesIsFalse() {
+        const repoPaths = [
+            ...this.repoPaths,
+            './src/__tests__/testData/repoThree',
+        ]
+
+        const result = await this.countTestsIn(repoPaths, {
+            excludeNodeModules: false,
+        })
+
+        this.assertResultEqualsExpected(
+            result,
+            {
+                './src/__tests__/testData/repoThree': 1,
+            },
+            7
+        )
     }
 
     private static async countTestsIn(
@@ -69,12 +87,13 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
 
     private static assertResultEqualsExpected(
         result: TestCounterResult,
-        perRepo?: Record<string, number>
+        perRepo?: Record<string, number>,
+        total = 6
     ) {
         assert.isEqualDeep(
             result,
             {
-                total: 6,
+                total,
                 perRepo: {
                     './src/__tests__/testData/repoOne': 1,
                     './src/__tests__/testData/repoTwo': 5,

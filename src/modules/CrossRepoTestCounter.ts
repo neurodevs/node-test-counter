@@ -17,7 +17,7 @@ export default class CrossRepoTestCounter implements TestCounter {
     }
 
     public async countTestsIn(repoPaths: string[], options?: CountOptions) {
-        const { excludeNodeModules = false } = options ?? {}
+        const { excludeNodeModules = true } = options ?? {}
 
         const results: TestCounterResult = {
             total: 0,
