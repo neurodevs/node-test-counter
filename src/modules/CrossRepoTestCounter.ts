@@ -14,7 +14,9 @@ export default class CrossRepoTestCounter implements TestCounter {
         return new (this.Class ?? this)()
     }
 
-    public async countTestsIn(repoPaths: string[]) {
+    public async countTestsIn(repoPaths: string[], options?: CountOptions) {
+        const { excludeNodeModules = false } = options ?? {}
+
         const results: TestCounterResult = {
             total: 0,
             perRepo: {},
@@ -22,7 +24,10 @@ export default class CrossRepoTestCounter implements TestCounter {
 
         for (const repoPath of repoPaths) {
             try {
-                const count = await this.countTestsInRepo(repoPath)
+                const count = await this.countTestsInRepo(
+                    repoPath,
+                    excludeNodeModules
+                )
                 results.perRepo[repoPath] = count
                 results.total += count
             } catch (error: any) {
@@ -37,18 +42,27 @@ export default class CrossRepoTestCounter implements TestCounter {
         return results
     }
 
-    private async countTestsInRepo(repoPath: string) {
+    private async countTestsInRepo(
+        repoPath: string,
+        excludeNodeModules: boolean
+    ) {
         const files = await this.walk(repoPath)
         const repoName = path.basename(repoPath)
 
-        const testFiles = files.filter((file) =>
-            this.EXTENSIONS.includes(path.extname(file))
-        )
-
         let total = 0
 
-        for (const file of testFiles) {
-            if (!file.split(repoName)[1].includes('testData')) {
+        for (const file of files) {
+            const relativePath = file.split(repoName)[1]
+
+            const shouldExclude =
+                excludeNodeModules && file.includes('node_modules')
+
+            const shouldInclude =
+                this.EXTENSIONS.some((ext) => file.endsWith(ext)) &&
+                !relativePath.includes('testData') &&
+                !shouldExclude
+
+            if (shouldInclude) {
                 total += await this.countTestsInFile(file)
             }
         }
@@ -79,10 +93,17 @@ export default class CrossRepoTestCounter implements TestCounter {
 }
 
 export interface TestCounter {
-    countTestsIn(repoPaths: string[]): Promise<TestCounterResult>
+    countTestsIn(
+        repoPaths: string[],
+        options?: CountOptions
+    ): Promise<TestCounterResult>
 }
 
 export type TestCounterConstructor = new () => TestCounter
+
+export interface CountOptions {
+    excludeNodeModules?: boolean
+}
 
 export interface TestCounterResult {
     total: number

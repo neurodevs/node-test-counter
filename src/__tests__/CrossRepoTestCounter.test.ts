@@ -5,7 +5,9 @@ import AbstractSpruceTest, {
     generateId,
 } from '@sprucelabs/test-utils'
 import CrossRepoTestCounter, {
+    CountOptions,
     TestCounter,
+    TestCounterResult,
 } from '../modules/CrossRepoTestCounter'
 
 export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
@@ -37,13 +39,38 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
 
     @test()
     protected static async resultEqualsExpected() {
+        const result = await this.countTestsIn()
+
+        this.assertResultEqualsExpected(result)
+    }
+
+    @test()
+    protected static async hasOptionalExcludeNodeModulesParam() {
         const repoPaths = [
-            './src/__tests__/testData/repoOne',
-            './src/__tests__/testData/repoTwo',
+            ...this.repoPaths,
+            './src/__tests__/testData/repoThree',
         ]
 
-        const result = await this.instance.countTestsIn(repoPaths)
+        const result = await this.countTestsIn(repoPaths, {
+            excludeNodeModules: true,
+        })
 
+        this.assertResultEqualsExpected(result, {
+            './src/__tests__/testData/repoThree': 0,
+        })
+    }
+
+    private static async countTestsIn(
+        repoPaths = this.repoPaths,
+        options?: CountOptions
+    ) {
+        return await this.instance.countTestsIn(repoPaths, options)
+    }
+
+    private static assertResultEqualsExpected(
+        result: TestCounterResult,
+        perRepo?: Record<string, number>
+    ) {
         assert.isEqualDeep(
             result,
             {
@@ -51,11 +78,17 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
                 perRepo: {
                     './src/__tests__/testData/repoOne': 1,
                     './src/__tests__/testData/repoTwo': 5,
+                    ...perRepo,
                 },
             },
             'Result is not expected!'
         )
     }
+
+    private static repoPaths = [
+        './src/__tests__/testData/repoOne',
+        './src/__tests__/testData/repoTwo',
+    ]
 
     private static CrossRepoTestCounter() {
         return CrossRepoTestCounter.Create()

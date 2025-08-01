@@ -40,6 +40,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+!src/__tests__/testData/repoOne/node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
