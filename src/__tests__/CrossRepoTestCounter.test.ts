@@ -83,7 +83,7 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async hasOptionalExcludedPatternsParam() {
+    protected static async hasOptionalExcludePatternsParam() {
         const repoPaths = ['./src/__tests__/testData/repo4']
 
         const result = await this.countTestsIn(repoPaths, {
@@ -103,7 +103,7 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     }
 
     @test()
-    protected static async hasOptionalRequiredPatternsParam() {
+    protected static async hasOptionalRequirePatternsParam() {
         const repoPaths = ['./src/__tests__/testData/repo5']
 
         const result = await this.countTestsIn(repoPaths, {
