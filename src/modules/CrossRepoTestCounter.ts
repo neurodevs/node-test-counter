@@ -17,7 +17,11 @@ export default class CrossRepoTestCounter implements TestCounter {
     }
 
     public async countTestsIn(repoPaths: string[], options?: CountOptions) {
-        const { excludeNodeModules = true, excludePatterns } = options ?? {}
+        const {
+            requirePatterns,
+            excludeNodeModules = true,
+            excludePatterns,
+        } = options ?? {}
 
         const results: TestCounterResult = {
             total: 0,
@@ -29,6 +33,7 @@ export default class CrossRepoTestCounter implements TestCounter {
             this.throwIfRepoDoesNotExist()
 
             const count = await this.countTestsInRepo({
+                requirePatterns: requirePatterns ?? [],
                 excludeNodeModules,
                 excludePatterns: excludePatterns ?? [],
             })
@@ -50,7 +55,7 @@ export default class CrossRepoTestCounter implements TestCounter {
     }
 
     private async countTestsInRepo(options: Required<CountOptions>) {
-        const { excludeNodeModules, excludePatterns } = options
+        const { requirePatterns, excludeNodeModules, excludePatterns } = options
 
         const files = await this.walk(this.currentRepoPath)
 
@@ -63,7 +68,9 @@ export default class CrossRepoTestCounter implements TestCounter {
 
             const shouldExclude =
                 (excludeNodeModules && file.includes('node_modules')) ||
-                excludePatterns?.some((pattern) => file.includes(pattern))
+                excludePatterns?.some((pattern) => file.includes(pattern)) ||
+                (requirePatterns.length > 0 &&
+                    !requirePatterns.some((pattern) => file.includes(pattern)))
 
             if (isValidFileType && !shouldExclude) {
                 total += await this.countTestsInFile(file)
@@ -105,6 +112,7 @@ export interface TestCounter {
 export type TestCounterConstructor = new () => TestCounter
 
 export interface CountOptions {
+    requirePatterns?: string[]
     excludePatterns?: string[]
     excludeNodeModules?: boolean
 }
