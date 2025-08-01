@@ -46,35 +46,59 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
 
     @test()
     protected static async hasOptionalExcludeNodeModulesParam() {
-        const repoPaths = [
-            ...this.repoPaths,
-            './src/__tests__/testData/repoThree',
-        ]
+        const repoPaths = ['./src/__tests__/testData/repo3']
 
         const result = await this.countTestsIn(repoPaths)
 
-        this.assertResultEqualsExpected(result, {
-            './src/__tests__/testData/repoThree': 0,
-        })
+        assert.isEqualDeep(
+            result,
+            {
+                total: 0,
+                perRepo: {
+                    './src/__tests__/testData/repo3': 0,
+                },
+            },
+            'Result is not expected!'
+        )
     }
 
     @test()
     protected static async countsIfExcludeNodeModulesIsFalse() {
-        const repoPaths = [
-            ...this.repoPaths,
-            './src/__tests__/testData/repoThree',
-        ]
+        const repoPaths = ['./src/__tests__/testData/repo3']
 
         const result = await this.countTestsIn(repoPaths, {
             excludeNodeModules: false,
         })
 
-        this.assertResultEqualsExpected(
+        assert.isEqualDeep(
             result,
             {
-                './src/__tests__/testData/repoThree': 1,
+                total: 1,
+                perRepo: {
+                    './src/__tests__/testData/repo3': 1,
+                },
             },
-            7
+            'Result is not expected!'
+        )
+    }
+
+    @test()
+    protected static async hasOptionalExcludePatternParam() {
+        const repoPaths = ['./src/__tests__/testData/repo4']
+
+        const result = await this.countTestsIn(repoPaths, {
+            excludePatterns: ['excludedDir', 'excludedModule'],
+        })
+
+        assert.isEqualDeep(
+            result,
+            {
+                total: 0,
+                perRepo: {
+                    './src/__tests__/testData/repo4': 0,
+                },
+            },
+            'Result is not expected!'
         )
     }
 
@@ -95,8 +119,8 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
             {
                 total,
                 perRepo: {
-                    './src/__tests__/testData/repoOne': 1,
-                    './src/__tests__/testData/repoTwo': 5,
+                    './src/__tests__/testData/repo1': 1,
+                    './src/__tests__/testData/repo2': 5,
                     ...perRepo,
                 },
             },
@@ -105,8 +129,8 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     }
 
     private static repoPaths = [
-        './src/__tests__/testData/repoOne',
-        './src/__tests__/testData/repoTwo',
+        './src/__tests__/testData/repo1',
+        './src/__tests__/testData/repo2',
     ]
 
     private static CrossRepoTestCounter() {

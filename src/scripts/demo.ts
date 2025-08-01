@@ -29,7 +29,10 @@ async function main() {
 
     const instance = CrossRepoTestCounter.Create()
 
-    const results = await instance.countTestsIn(repoPaths)
+    const results = await instance.countTestsIn(repoPaths, {
+        excludePatterns: ['testData'],
+        excludeNodeModules: true,
+    })
 
     const simplified: Record<string, number> = {}
 

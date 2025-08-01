@@ -33,7 +33,7 @@
 		"./src/*.tsx",
 		"./src/**/*.tsx",
 		"./src/.spruce/**/*"
-, "src/__tests__/testData/repoTwo/moduleWithThreeTests.tsx", "src/__tests__/testData/repoTwo/moduleWithTwoTests.ts"	],
+	],
 	"exclude": [
 		"build",
 		"esm"

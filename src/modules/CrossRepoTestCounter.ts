@@ -17,7 +17,7 @@ export default class CrossRepoTestCounter implements TestCounter {
     }
 
     public async countTestsIn(repoPaths: string[], options?: CountOptions) {
-        const { excludeNodeModules = true } = options ?? {}
+        const { excludeNodeModules = true, excludePatterns } = options ?? {}
 
         const results: TestCounterResult = {
             total: 0,
@@ -28,7 +28,10 @@ export default class CrossRepoTestCounter implements TestCounter {
             this.currentRepoPath = repoPath
             this.throwIfRepoDoesNotExist()
 
-            const count = await this.countTestsInRepo(excludeNodeModules)
+            const count = await this.countTestsInRepo({
+                excludeNodeModules,
+                excludePatterns: excludePatterns ?? [],
+            })
 
             results.perRepo[repoPath] = count
             results.total += count
@@ -46,24 +49,23 @@ export default class CrossRepoTestCounter implements TestCounter {
         }
     }
 
-    private async countTestsInRepo(excludeNodeModules: boolean) {
+    private async countTestsInRepo(options: Required<CountOptions>) {
+        const { excludeNodeModules, excludePatterns } = options
+
         const files = await this.walk(this.currentRepoPath)
-        const repoName = path.basename(this.currentRepoPath)
 
         let total = 0
 
         for (const file of files) {
-            const relativePath = file.split(repoName)[1]
+            const isValidFileType = this.EXTENSIONS.some((ext) =>
+                file.endsWith(ext)
+            )
 
             const shouldExclude =
-                excludeNodeModules && file.includes('node_modules')
+                (excludeNodeModules && file.includes('node_modules')) ||
+                excludePatterns?.some((pattern) => file.includes(pattern))
 
-            const shouldInclude =
-                this.EXTENSIONS.some((ext) => file.endsWith(ext)) &&
-                !relativePath.includes('testData') &&
-                !shouldExclude
-
-            if (shouldInclude) {
+            if (isValidFileType && !shouldExclude) {
                 total += await this.countTestsInFile(file)
             }
         }
@@ -103,6 +105,7 @@ export interface TestCounter {
 export type TestCounterConstructor = new () => TestCounter
 
 export interface CountOptions {
+    excludePatterns?: string[]
     excludeNodeModules?: boolean
 }
 
