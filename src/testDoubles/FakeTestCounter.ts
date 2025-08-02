@@ -8,7 +8,7 @@ export default class FakeTestCounter implements TestCounter {
     public static numCallsToConstructor = 0
     public static callsToCountTestsIn: CallToCountTestIn[] = []
 
-    public fakeResult = {} as TestCounterResult
+    public static fakeResult = {} as TestCounterResult
 
     public constructor() {
         FakeTestCounter.numCallsToConstructor++
@@ -17,6 +17,10 @@ export default class FakeTestCounter implements TestCounter {
     public async countTestsIn(repoPaths: string[], options?: CountOptions) {
         FakeTestCounter.callsToCountTestsIn.push({ repoPaths, options })
         return this.fakeResult
+    }
+
+    public get fakeResult() {
+        return FakeTestCounter.fakeResult
     }
 }
 
