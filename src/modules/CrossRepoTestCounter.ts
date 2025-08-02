@@ -5,10 +5,16 @@ import SpruceError from '../errors/SpruceError'
 export default class CrossRepoTestCounter implements TestCounter {
     public static Class?: TestCounterConstructor
 
-    private TEST_PATTERNS = [/@test\(/g]
-    private EXTENSIONS = ['.ts', '.tsx']
+    private repoPaths!: string[]
+    private requirePatterns!: string[]
+    private excludePatterns!: string[]
+    private excludeNodeModules!: boolean
 
     private currentRepoPath!: string
+    private currentFilePath!: string
+
+    private TEST_PATTERNS = [/@test\(/g]
+    private EXTENSIONS = ['.ts', '.tsx']
 
     protected constructor() {}
 
@@ -19,24 +25,29 @@ export default class CrossRepoTestCounter implements TestCounter {
     public async countTestsIn(repoPaths: string[], options?: CountOptions) {
         const {
             requirePatterns,
-            excludeNodeModules = true,
             excludePatterns,
+            excludeNodeModules = true,
         } = options ?? {}
 
+        this.repoPaths = repoPaths
+        this.requirePatterns = requirePatterns ?? []
+        this.excludePatterns = excludePatterns ?? []
+        this.excludeNodeModules = excludeNodeModules
+
+        return await this.calculateResults()
+    }
+
+    private async calculateResults() {
         const results: TestCounterResult = {
             total: 0,
             perRepo: {},
         }
 
-        for (const repoPath of repoPaths) {
+        for (const repoPath of this.repoPaths) {
             this.currentRepoPath = repoPath
             this.throwIfRepoDoesNotExist()
 
-            const count = await this.countTestsInRepo({
-                requirePatterns: requirePatterns ?? [],
-                excludeNodeModules,
-                excludePatterns: excludePatterns ?? [],
-            })
+            const count = await this.countTestsInRepo()
 
             results.perRepo[repoPath] = count
             results.total += count
@@ -58,38 +69,20 @@ export default class CrossRepoTestCounter implements TestCounter {
         return !fs.existsSync(this.currentRepoPath)
     }
 
-    private async countTestsInRepo(options: Required<CountOptions>) {
-        const { requirePatterns, excludeNodeModules, excludePatterns } = options
-
-        const files = await this.walk(this.currentRepoPath)
+    private async countTestsInRepo() {
+        const filePaths = await this.walk(this.currentRepoPath)
 
         let total = 0
 
-        for (const file of files) {
-            const isValidFileType = this.EXTENSIONS.some((ext) =>
-                file.endsWith(ext)
-            )
+        for (const filePath of filePaths) {
+            this.currentFilePath = filePath
 
-            const shouldExclude =
-                (excludeNodeModules && file.includes('node_modules')) ||
-                excludePatterns?.some((pattern) => file.includes(pattern)) ||
-                (requirePatterns.length > 0 &&
-                    !requirePatterns.some((pattern) => file.includes(pattern)))
-
-            if (isValidFileType && !shouldExclude) {
-                total += await this.countTestsInFile(file)
+            if (this.shouldIncludeCurrentFile) {
+                total += await this.countTestsInFile()
             }
         }
 
         return total
-    }
-
-    private async countTestsInFile(filePath: string) {
-        const content = await fs.promises.readFile(filePath, 'utf-8')
-
-        return this.TEST_PATTERNS.reduce((acc, regex) => {
-            return acc + (content.match(regex) || []).length
-        }, 0)
     }
 
     private async walk(dir: string) {
@@ -97,12 +90,59 @@ export default class CrossRepoTestCounter implements TestCounter {
 
         const files: string[][] = await Promise.all(
             entries.map((entry) => {
-                const res = path.resolve(dir, entry.name)
-                return entry.isDirectory() ? this.walk(res) : [res]
+                const fullPath = path.resolve(dir, entry.name)
+                return entry.isDirectory() ? this.walk(fullPath) : [fullPath]
             })
         )
 
         return files.flat()
+    }
+
+    private get shouldIncludeCurrentFile() {
+        return (
+            this.hasValidFileExtension &&
+            this.satisfiesRequirePatterns &&
+            this.satisfiesExcludePatterns &&
+            this.satisfiesNodeModules
+        )
+    }
+
+    private get hasValidFileExtension() {
+        return this.EXTENSIONS.some((ext) => this.currentFilePath.endsWith(ext))
+    }
+
+    private get satisfiesRequirePatterns() {
+        return (
+            this.requirePatterns.length == 0 ||
+            this.requirePatterns.some((pattern) =>
+                this.currentFilePath.includes(pattern)
+            )
+        )
+    }
+
+    private get satisfiesExcludePatterns() {
+        return !this.excludePatterns?.some((pattern) =>
+            this.currentFilePath.includes(pattern)
+        )
+    }
+
+    private get satisfiesNodeModules() {
+        return !(
+            this.excludeNodeModules &&
+            this.currentFilePath.includes('node_modules')
+        )
+    }
+
+    private async countTestsInFile() {
+        const content = await this.readCurrentFile()
+
+        return this.TEST_PATTERNS.reduce((acc, regex) => {
+            return acc + (content.match(regex) || []).length
+        }, 0)
+    }
+
+    private async readCurrentFile() {
+        return await fs.promises.readFile(this.currentFilePath, 'utf-8')
     }
 }
 
