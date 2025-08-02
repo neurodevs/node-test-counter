@@ -88,14 +88,14 @@ export default class CrossRepoTestCounter implements TestCounter {
     private async walk(dir: string) {
         const entries = await fs.promises.readdir(dir, { withFileTypes: true })
 
-        const files: string[][] = await Promise.all(
+        const nestedFilePaths: string[][] = await Promise.all(
             entries.map((entry) => {
                 const fullPath = path.resolve(dir, entry.name)
                 return entry.isDirectory() ? this.walk(fullPath) : [fullPath]
             })
         )
 
-        return files.flat()
+        return nestedFilePaths.flat()
     }
 
     private get shouldIncludeCurrentFile() {
@@ -121,7 +121,7 @@ export default class CrossRepoTestCounter implements TestCounter {
     }
 
     private get satisfiesExcludePatterns() {
-        return !this.excludePatterns?.some((pattern) =>
+        return !this.excludePatterns.some((pattern) =>
             this.currentFilePath.includes(pattern)
         )
     }
