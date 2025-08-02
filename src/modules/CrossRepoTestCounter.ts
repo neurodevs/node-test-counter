@@ -46,12 +46,16 @@ export default class CrossRepoTestCounter implements TestCounter {
     }
 
     private throwIfRepoDoesNotExist() {
-        if (!fs.existsSync(this.currentRepoPath)) {
+        if (this.currentRepoDoesNotExist) {
             throw new SpruceError({
                 code: 'REPO_NOT_FOUND',
                 repoPath: this.currentRepoPath,
             })
         }
+    }
+
+    private get currentRepoDoesNotExist() {
+        return !fs.existsSync(this.currentRepoPath)
     }
 
     private async countTestsInRepo(options: Required<CountOptions>) {
