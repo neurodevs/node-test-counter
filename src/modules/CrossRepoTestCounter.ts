@@ -41,6 +41,7 @@ export default class CrossRepoTestCounter implements TestCounter {
         const results: TestCounterResult = {
             total: 0,
             perRepo: {},
+            perRepoOrdered: new Map<string, number>(),
         }
 
         for (const repoPath of this.repoPaths) {
@@ -50,6 +51,7 @@ export default class CrossRepoTestCounter implements TestCounter {
             const count = await this.countTestsInRepo()
 
             results.perRepo[repoPath] = count
+            results.perRepoOrdered.set(repoPath, count)
             results.total += count
         }
 
@@ -164,4 +166,5 @@ export interface CountOptions {
 export interface TestCounterResult {
     total: number
     perRepo: Record<string, number>
+    perRepoOrdered: Map<string, number>
 }
