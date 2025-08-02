@@ -51,8 +51,17 @@ export default class CrossRepoTestCounter implements TestCounter {
             const count = await this.countTestsInRepo()
 
             results.perRepo[repoPath] = count
-            results.perRepoOrdered.set(repoPath, count)
             results.total += count
+        }
+
+        const entries = Object.entries(results.perRepo)
+
+        const sortedEntries = entries.sort(
+            ([, countA], [, countB]) => countB - countA
+        )
+
+        for (const [repo, count] of sortedEntries) {
+            results.perRepoOrdered.set(repo, count)
         }
 
         return results

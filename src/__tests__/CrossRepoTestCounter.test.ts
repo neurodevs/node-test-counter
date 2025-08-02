@@ -111,6 +111,22 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
         expected: TestCounterResult
     ) {
         assert.isEqualDeep(result, expected, 'Result is not expected!')
+
+        this.assertMapOrderIsEqual(result, expected)
+    }
+
+    private static assertMapOrderIsEqual(
+        result: TestCounterResult,
+        expected: TestCounterResult
+    ) {
+        const resultEntries = Array.from(result.perRepoOrdered.entries())
+        const expectedEntries = Array.from(expected.perRepoOrdered.entries())
+
+        assert.isEqualDeep(
+            resultEntries,
+            expectedEntries,
+            'perRepoOrdered is not expected!'
+        )
     }
 
     private static generateExpectedResult(perRepo: Record<string, number>) {
@@ -119,10 +135,16 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
             0
         )
 
+        const perRepoOrdered = new Map<string, number>(
+            Object.entries(perRepo).sort(
+                ([, countA], [, countB]) => countB - countA
+            )
+        )
+
         return {
             total,
             perRepo,
-            perRepoOrdered: new Map<string, number>(Object.entries(perRepo)),
+            perRepoOrdered,
         } as TestCounterResult
     }
 

@@ -34,12 +34,8 @@ async function main() {
         excludeNodeModules: true,
     })
 
-    const sortedByMaxCount = Object.fromEntries(
-        Object.entries(results.perRepo).sort(([, a], [, b]) => b - a)
-    )
-
     console.log('\n\nTest counts across @neurodevs repos:\n')
-    console.log({ total: results.total, perRepo: sortedByMaxCount })
+    console.log(results)
     console.log('\n')
 }
 
