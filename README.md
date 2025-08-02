@@ -30,29 +30,33 @@ The counter works by recursively counting occurrences of `test(` in the specifie
 ```typescript
 import { CrossRepoTestCounter } from '@neurodevs/node-test-counter'
 
-const instance = CrossRepoTestCounter.Create()
+async function main() {
+    const instance = CrossRepoTestCounter.Create()
 
-const repoPaths = [
-    '/path/to/repo1',
-    '/path/to/repo2',
-    ...
-]
+    const repoPaths = [
+        '/path/to/repo1',
+        '/path/to/repo2',
+        // Add more repo paths as needed
+    ]
 
-// Must be in async function
-const result = await instance.countTestsIn(repoPaths)
-console.log(result)
+    const result = await instance.countTestsIn(repoPaths)
+    console.log(result)
 
-// {
-//   total: 7,
-//   perRepo: {
-//     '/path/to/repo1': 3,
-//     '/path/to/repo2': 4,
-//     ...
-//   }
-//   perRepoOrdered: Map(2) {
-//     '/path/to/repo1' => 4,
-//     '/path/to/repo2' => 3,
-//     ...
-//   }
-// }
+    // Example output:
+    // {
+    //   total: 7,
+    //   perRepo: {
+    //     '/path/to/repo1': 3,
+    //     '/path/to/repo2': 4
+    //   },
+    //   perRepoOrdered: Map(2) {
+    //     '/path/to/repo2' => 4,
+    //     '/path/to/repo1' => 3
+    //   }
+    // }
+}
+
+main().catch((err) => {
+    console.error('Error running test counter:', err)
+})
 ```
