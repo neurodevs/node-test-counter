@@ -49,5 +49,10 @@ console.log(result)
 //     '/path/to/repo2': 4,
 //     ...
 //   }
+//   perRepoOrdered: Map(2) {
+//     '/path/to/repo1' => 4,
+//     '/path/to/repo2' => 3,
+//     ...
+//   }
 // }
 ```
