@@ -7,7 +7,6 @@ import AbstractSpruceTest, {
 import CrossRepoTestCounter, {
     CountOptions,
     TestCounter,
-    TestCounterResult,
 } from '../modules/CrossRepoTestCounter'
 
 export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
@@ -41,7 +40,17 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     protected static async resultEqualsExpected() {
         const result = await this.countTestsIn()
 
-        this.assertResultEqualsExpected(result)
+        assert.isEqualDeep(
+            result,
+            {
+                total: 6,
+                perRepo: {
+                    './src/__tests__/testData/repo1': 1,
+                    './src/__tests__/testData/repo2': 5,
+                },
+            },
+            'Result is not expected!'
+        )
     }
 
     @test()
@@ -127,25 +136,6 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
         options?: CountOptions
     ) {
         return await this.instance.countTestsIn(repoPaths, options)
-    }
-
-    private static assertResultEqualsExpected(
-        result: TestCounterResult,
-        perRepo?: Record<string, number>,
-        total = 6
-    ) {
-        assert.isEqualDeep(
-            result,
-            {
-                total,
-                perRepo: {
-                    './src/__tests__/testData/repo1': 1,
-                    './src/__tests__/testData/repo2': 5,
-                    ...perRepo,
-                },
-            },
-            'Result is not expected!'
-        )
     }
 
     private static repoPaths = [
