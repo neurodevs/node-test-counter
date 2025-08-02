@@ -25,7 +25,7 @@ Or, for example with yarn:
 
 ### CrossRepoTestCounter
 
-The counter works by recursively counting occurrences of `test(` in the specified repoPaths. It’s recommended to limit search paths to `src` directories (or equivalent) to reduce runtime and avoid double-counting tests in build artifacts. All repositories must exist locally on your filesystem before running.
+The counter works by recursively counting occurrences of `test(` in the specified repoPaths. All repositories must exist locally on your filesystem before running.
 
 ```typescript
 import { CrossRepoTestCounter } from '@neurodevs/node-test-counter'
@@ -33,8 +33,8 @@ import { CrossRepoTestCounter } from '@neurodevs/node-test-counter'
 const instance = CrossRepoTestCounter.Create()
 
 const repoPaths = [
-    '/path/to/repo1/src',
-    '/path/to/repo2/src',
+    '/path/to/repo1',
+    '/path/to/repo2',
     ...
 ]
 
@@ -45,8 +45,8 @@ console.log(result)
 // {
 //   total: 7,
 //   perRepo: {
-//     '/path/to/repo1/src': 3,
-//     '/path/to/repo2/src': 4,
+//     '/path/to/repo1': 3,
+//     '/path/to/repo2': 4,
 //     ...
 //   }
 // }
