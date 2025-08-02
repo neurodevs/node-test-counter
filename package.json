@@ -1,7 +1,7 @@
 {
   "name": "@neurodevs/node-test-counter",
   "main": "build/index.js",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "repository": "https://github.com/neurodevs/node-test-counter.git",
   "scripts": {
     "build.ci": "yarn run build.tsc && yarn run build.resolve-paths && yarn run lint",
