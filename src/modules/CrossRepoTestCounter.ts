@@ -9,6 +9,7 @@ export default class CrossRepoTestCounter implements TestCounter {
     private requirePatterns!: string[]
     private excludePatterns!: string[]
     private excludeNodeModules!: boolean
+    private results!: TestCounterResult
 
     private currentRepoPath!: string
     private currentFilePath!: string
@@ -34,11 +35,13 @@ export default class CrossRepoTestCounter implements TestCounter {
         this.excludePatterns = excludePatterns ?? []
         this.excludeNodeModules = excludeNodeModules
 
-        return await this.calculateResults()
+        await this.calculateResults()
+
+        return this.results
     }
 
     private async calculateResults() {
-        const results: TestCounterResult = {
+        this.results = {
             total: 0,
             perRepo: {},
             perRepoOrdered: new Map<string, number>(),
@@ -50,21 +53,11 @@ export default class CrossRepoTestCounter implements TestCounter {
 
             const count = await this.countTestsInRepo()
 
-            results.perRepo[repoPath] = count
-            results.total += count
+            this.results.perRepo[repoPath] = count
+            this.results.total += count
         }
 
-        const entries = Object.entries(results.perRepo)
-
-        const sortedEntries = entries.sort(
-            ([, countA], [, countB]) => countB - countA
-        )
-
-        for (const [repo, count] of sortedEntries) {
-            results.perRepoOrdered.set(repo, count)
-        }
-
-        return results
+        this.sortOrderedByMaxCount()
     }
 
     private throwIfRepoDoesNotExist() {
@@ -154,6 +147,18 @@ export default class CrossRepoTestCounter implements TestCounter {
 
     private async readCurrentFile() {
         return await fs.promises.readFile(this.currentFilePath, 'utf-8')
+    }
+
+    private sortOrderedByMaxCount() {
+        const entries = Object.entries(this.results.perRepo)
+
+        const sortedEntries = entries.sort(
+            ([, countA], [, countB]) => countB - countA
+        )
+
+        for (const [repo, count] of sortedEntries) {
+            this.results.perRepoOrdered.set(repo, count)
+        }
     }
 }
 
