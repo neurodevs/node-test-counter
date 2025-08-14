@@ -22,22 +22,29 @@ If you install the package globally, there is a CLI that you can use with a simp
 
 For basic usage within a pacakge, install node-test-counter with your preferred package manager (run inside your Node project):
 
-`npm install @neurodevs/node-test-counter` 
+```bash
+npm install @neurodevs/node-test-counter
+``` 
 
 Or, for example with yarn:
 
-`yarn add @neurodevs/node-test-counter`
+```bash
+yarn add @neurodevs/node-test-counter
+```
 
 ### Global Installation
 
-
 node-test-counter also comes with a built-in CLI that can be installed globally so you can run it from anywhere without needing a local script. See [Usage](#usage) section for more details.
 
-`npm install -g @neurodevs/node-test-counter`
+```bash
+npm install -g @neurodevs/node-test-counter
+```
 
 Or, with yarn:
 
-`yarn global add @neurodevs/node-test-counter`
+```bash
+yarn global add @neurodevs/node-test-counter
+```
 
 ## Usage
 
