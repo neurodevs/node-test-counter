@@ -34,7 +34,7 @@ yarn add @neurodevs/node-test-counter
 
 ### Global Installation
 
-node-test-counter also comes with a built-in CLI that can be installed globally so you can run it from anywhere without needing a local script. See [Usage](#usage) section for more details.
+node-test-counter also comes with a built-in CLI that can be installed globally so you can run it from anywhere without needing a local script. See [CLI Usage](#cli-usage) section for more details.
 
 ```bash
 npm install -g @neurodevs/node-test-counter
