@@ -42,7 +42,7 @@ Notes:
     process.stdout.write(help.trimStart() + '\n')
 }
 
-function parseArgs(argv: string[]): CliOptions {
+function parseArgs(argv: string[]) {
     const opts: CliOptions = { help: false, repoPaths: [] }
 
     for (const a of argv) {
@@ -58,7 +58,7 @@ function parseArgs(argv: string[]): CliOptions {
     return opts
 }
 
-function resolvePaths(pathsIn: string[]): string[] {
+function resolvePaths(pathsIn: string[]) {
     const cwd = process.cwd()
     const paths = (pathsIn.length > 0 ? pathsIn : [cwd]).map((p) =>
         path.resolve(cwd, p)
@@ -82,7 +82,7 @@ function printHuman(result: TestCounterResult) {
     process.stdout.write(lines.join('\n') + '\n')
 }
 
-async function main(): Promise<void> {
+async function main() {
     try {
         const opts = parseArgs(process.argv.slice(2))
         if (opts.help) {
