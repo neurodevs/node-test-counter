@@ -7,8 +7,8 @@ Count the total number of test cases across repos
   - [Package Installation](#package-installation)
   - [Global Installation](#global-installation)
 - [Usage](#usage)
-  - [CrossRepoTestCounter](#crossrepotestcounter)
   - [CLI Usage](#cli-usage)
+  - [CrossRepoTestCounter](#crossrepotestcounter)
 
 ## Overview
 
