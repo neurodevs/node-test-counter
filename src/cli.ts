@@ -12,7 +12,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import CrossRepoTestCounter from './modules/CrossRepoTestCounter'
+import CrossRepoTestCounter, {
+    TestCounterResult,
+} from './modules/CrossRepoTestCounter'
 
 export interface CliOptions {
     repoPaths: string[]
@@ -68,17 +70,12 @@ function resolvePaths(pathsIn: string[]): string[] {
     return paths
 }
 
-function printHuman(result: {
-    total: number
-    perRepo: Record<string, number>
-    perRepoOrdered: Map<string, number> | Record<string, number>
-}): void {
+function printHuman(result: TestCounterResult) {
+    console.log(result)
     const lines: string[] = []
     lines.push(`Total tests: ${result.total}`)
-    const entries =
-        result.perRepoOrdered instanceof Map
-            ? Array.from(result.perRepoOrdered.entries())
-            : Object.entries(result.perRepo).sort((a, b) => b[1] - a[1])
+    const entries = Array.from(result.perRepoOrdered.entries())
+
     for (const [repo, count] of entries) {
         lines.push(`${count.toString().padStart(6)}  ${repo}`)
     }
