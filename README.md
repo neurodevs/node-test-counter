@@ -52,17 +52,14 @@ yarn global add @neurodevs/node-test-counter
 
 Once [installed globally](#global-installation), you can run node-test-counter directly from the command line.
 
-Count tests in the current working directory, with results shown for each top-level subdirectory:
+If don't pass any args, it will count tests in the current working directory, with results shown for each top-level subdirectory:
 
-`count-tests`
-
-Count tests in one or more specific directories:
-
-`count-tests path/to/repo1 path/to/repo2`
-
-Display help:
-
-`count-tests --help` or `count-tests -h`
+```bash
+count-tests
+count-tests path/to/repo1 path/to/repo2
+count-tests --help
+count-tests -h
+```
 
 ### CrossRepoTestCounter
 
