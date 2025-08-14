@@ -4,8 +4,11 @@ Count the total number of test cases across repos
 ## Table of Contents
 - [Overview](#overview)
 - [Installation](#installation)
+  - [Package Installation](#package-installation)
+  - [Global Installation](#global-installation)
 - [Usage](#usage)
   - [CrossRepoTestCounter](#crossrepotestcounter)
+  - [CLI Usage](#cli-usage)
 
 ## Overview
 
@@ -13,7 +16,9 @@ node-test-counter is a lightweight utility for scanning multiple repositories an
 
 ## Installation
 
-Install the package with your preferred package manager (make sure to be in the right directory for your Node project):
+### Package Installation
+
+For basic usage within a pacakge, install node-test-counter with your preferred package manager (run inside your Node project):
 
 `npm install @neurodevs/node-test-counter` 
 
@@ -21,7 +26,34 @@ Or, for example with yarn:
 
 `yarn add @neurodevs/node-test-counter`
 
+### Global Installation
+
+
+node-test-counter also comes with a built-in CLI that can be installed globally so you can run it from anywhere without needing a local script. See [Usage](#usage) section for more details.
+
+`npm install -g @neurodevs/node-test-counter`
+
+Or, with yarn:
+
+`yarn global add @neurodevs/node-test-counter`
+
 ## Usage
+
+### CLI Usage
+
+Once [installed globally](#global-installation), you can run node-test-counter directly from the command line.
+
+Count tests in the current working directory:
+
+`$ count-tests`
+
+Count tests in one or more specific directories:
+
+`$ count-tests path/to/repo1 path/to/repo2`
+
+Display help:
+
+`count-tests --help` or `count-tests -h`
 
 ### CrossRepoTestCounter
 
