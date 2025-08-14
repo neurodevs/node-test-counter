@@ -55,7 +55,7 @@ Count tests in one or more specific directories:
 
 Display help:
 
-`count-tests --help` or `count-tests -h`
+`$ count-tests --help` or `count-tests -h`
 
 ### CrossRepoTestCounter
 
