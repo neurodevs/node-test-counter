@@ -80,7 +80,6 @@ function resolvePaths(pathsIn: string[]) {
 }
 
 function printHuman(result: TestCounterResult) {
-    process.stdout.write(JSON.stringify(result))
     const lines: string[] = []
     lines.push(`Total tests: ${result.total}`)
     const entries = Array.from(result.perRepoOrdered.entries())
