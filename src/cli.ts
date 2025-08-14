@@ -55,6 +55,15 @@ function parseArgs(argv: string[]) {
         }
     }
 
+    if (opts.repoPaths.length === 0) {
+        const cwd = process.cwd()
+        const subdirs = fs
+            .readdirSync(cwd, { withFileTypes: true })
+            .filter((d) => d.isDirectory())
+            .map((d) => path.resolve(cwd, d.name))
+        opts.repoPaths.push(...subdirs)
+    }
+
     return opts
 }
 
