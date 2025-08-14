@@ -14,6 +14,8 @@ Count the total number of test cases across repos
 
 node-test-counter is a lightweight utility for scanning multiple repositories and counting the number of test cases across them. It’s useful for keeping track of testing coverage across a monorepo or ecosystem of packages.
 
+If you install the package globally, there is a CLI that you can use with a simple `count-tests [...]` on the command-line.
+
 ## Installation
 
 ### Package Installation
@@ -43,7 +45,7 @@ Or, with yarn:
 
 Once [installed globally](#global-installation), you can run node-test-counter directly from the command line.
 
-Count tests in the current working directory:
+Count tests in the current working directory, with results shown for each top-level subdirectory:
 
 `$ count-tests`
 
