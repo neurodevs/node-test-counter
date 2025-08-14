@@ -56,8 +56,23 @@ If don't pass any args, it will count tests in the current working directory, wi
 
 ```bash
 count-tests
+```
+
+You can also pass it a list of repos to check:
+
+```bash
 count-tests path/to/repo1 path/to/repo2
+```
+
+Check the help message with:
+
+```bash
 count-tests --help
+```
+
+Or:
+
+```bash
 count-tests -h
 ```
 
