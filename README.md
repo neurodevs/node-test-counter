@@ -70,7 +70,7 @@ Check the help message with:
 count-tests --help
 ```
 
-Or:
+Or with:
 
 ```bash
 count-tests -h
