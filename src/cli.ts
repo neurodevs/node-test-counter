@@ -4,9 +4,9 @@
  * CLI for @neurodevs/node-test-counter
  *
  * Usage:
- *   node-test-counter                    # scan current working directory
- *   node-test-counter <path> [...]       # scan one or more repo paths
- *   node-test-counter --help             # usage info
+ *   count-tests                    # scan current working directory
+ *   count-tests <path> [...]       # scan one or more repo paths
+ *   count-tests --help             # usage info
  */
 
 import fs from 'node:fs'
@@ -23,13 +23,13 @@ export interface CliOptions {
 
 function printHelp() {
     const help = `
-node-test-counter — count test cases across repos.
+count-tests — count test cases across repos.
 
 Usage:
-  node-test-counter
+  count-tests
     Scan the current working directory as a single repo.
 
-  node-test-counter <path> [<path> ...]
+  count-tests <path> [<path> ...]
     Scan one or more repositories at the given paths.
 
 Options:
