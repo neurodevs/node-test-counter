@@ -70,12 +70,6 @@ Check the help message with:
 count-tests --help
 ```
 
-Or with:
-
-```bash
-count-tests -h
-```
-
 ### CrossRepoTestCounter
 
 The counter works by recursively counting occurrences of `test(` in the specified repoPaths. All repositories must exist locally on your filesystem before running.
