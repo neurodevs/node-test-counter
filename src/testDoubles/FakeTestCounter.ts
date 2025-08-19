@@ -22,6 +22,11 @@ export default class FakeTestCounter implements TestCounter {
     public get fakeResult() {
         return FakeTestCounter.fakeResult
     }
+
+    public static resetTestDouble() {
+        FakeTestCounter.numCallsToConstructor = 0
+        FakeTestCounter.callsToCountTestsIn = []
+    }
 }
 
 export interface CallToCountTestIn {

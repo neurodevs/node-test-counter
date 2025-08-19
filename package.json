@@ -1,7 +1,7 @@
 {
   "name": "@neurodevs/node-test-counter",
   "main": "build/index.js",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "repository": "https://github.com/neurodevs/node-test-counter.git",
   "bin": {
     "count-tests": "./build/cli.js"
