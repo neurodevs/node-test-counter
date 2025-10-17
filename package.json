@@ -1,8 +1,23 @@
 {
   "name": "@neurodevs/node-test-counter",
-  "main": "build/index.js",
   "version": "1.4.6",
-  "repository": "https://github.com/neurodevs/node-test-counter.git",
+  "description": "Count total number of test cases across repos",
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "tdd"
+  ],
+  "license": "MIT",
+  "author": "Eric Yates <hello@ericthecurious.com>",
+  "homepage": "https://github.com/neurodevs/node-test-counter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neurodevs/node-test-counter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neurodevs/node-test-counter/issues"
+  },
+  "main": "build/index.js",
   "bin": {
     "count-tests": "./build/cli.js"
   },
@@ -28,6 +43,12 @@
     "watch.rebuild": "yarn run clean.all && yarn install && yarn run watch.build.dev",
     "watch.tsc": "tsc -w"
   },
+  "dependencies": {
+    "@sprucelabs/error": "^7.0.27",
+    "@sprucelabs/schema": "^32.0.45",
+    "@sprucelabs/spruce-core-schemas": "^41.0.44",
+    "@sprucelabs/spruce-skill-utils": "^32.0.47"
+  },
   "devDependencies": {
     "@sprucelabs/jest-json-reporter": "^9.0.29",
     "@sprucelabs/resolve-path-aliases": "^3.0.15",
@@ -43,10 +64,6 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^7.1.1",
     "typescript": "^5.8.3"
-  },
-  "description": "Count total number of test cases across repos",
-  "skill": {
-    "namespace": "node-test-counter"
   },
   "jest": {
     "testRunner": "jest-circus/runner",
@@ -66,10 +83,7 @@
       "^#spruce/(.*)$": "<rootDir>/build/.spruce/$1"
     }
   },
-  "dependencies": {
-    "@sprucelabs/error": "^7.0.27",
-    "@sprucelabs/schema": "^32.0.45",
-    "@sprucelabs/spruce-core-schemas": "^41.0.44",
-    "@sprucelabs/spruce-skill-utils": "^32.0.47"
+  "skill": {
+    "namespace": "node-test-counter"
   }
 }
