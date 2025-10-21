@@ -1,4 +1,4 @@
-import CrossRepoTestCounter from '../modules/CrossRepoTestCounter'
+import CrossRepoTestCounter from '../impl/CrossRepoTestCounter'
 
 async function main() {
     const repoPaths = [

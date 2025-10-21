@@ -14,7 +14,7 @@ import path from 'node:path'
 import process from 'node:process'
 import CrossRepoTestCounter, {
     TestCounterResult,
-} from './modules/CrossRepoTestCounter'
+} from './impl/CrossRepoTestCounter'
 
 export interface CliOptions {
     repoPaths: string[]

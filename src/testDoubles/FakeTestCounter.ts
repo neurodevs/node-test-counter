@@ -2,7 +2,7 @@ import {
     CountOptions,
     TestCounter,
     TestCounterResult,
-} from '../modules/CrossRepoTestCounter'
+} from '../impl/CrossRepoTestCounter'
 
 export default class FakeTestCounter implements TestCounter {
     public static numCallsToConstructor = 0

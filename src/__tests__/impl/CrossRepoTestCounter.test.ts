@@ -8,7 +8,7 @@ import CrossRepoTestCounter, {
     CountOptions,
     TestCounter,
     TestCounterResult,
-} from '../modules/CrossRepoTestCounter'
+} from '../../impl/CrossRepoTestCounter'
 
 export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     private static instance: TestCounter
