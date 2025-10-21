@@ -2,8 +2,8 @@ import AbstractSpruceTest, {
     test,
     assert,
     errorAssert,
-    generateId,
 } from '@sprucelabs/test-utils'
+import generateId from '@neurodevs/generate-id'
 import CrossRepoTestCounter, {
     CountOptions,
     TestCounter,
