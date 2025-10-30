@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import SpruceError from '../errors/SpruceError'
 
 export default class CrossRepoTestCounter implements TestCounter {
     public static Class?: TestCounterConstructor
@@ -62,10 +61,7 @@ export default class CrossRepoTestCounter implements TestCounter {
 
     private throwIfRepoDoesNotExist() {
         if (this.currentRepoDoesNotExist) {
-            throw new SpruceError({
-                code: 'REPO_NOT_FOUND',
-                repoPath: this.currentRepoPath,
-            })
+            throw new Error(`Could not find repo ${this.currentRepoPath}!`)
         }
     }
 

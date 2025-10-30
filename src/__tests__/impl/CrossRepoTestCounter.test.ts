@@ -1,16 +1,13 @@
-import AbstractSpruceTest, {
-    test,
-    assert,
-    errorAssert,
-} from '@sprucelabs/test-utils'
 import generateId from '@neurodevs/generate-id'
+import AbstractModuleTest, { test, assert } from '@neurodevs/node-tdd'
+
 import CrossRepoTestCounter, {
     CountOptions,
     TestCounter,
     TestCounterResult,
-} from '../../impl/CrossRepoTestCounter'
+} from '../../impl/CrossRepoTestCounter.js'
 
-export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
+export default class CrossRepoTestCounterTest extends AbstractModuleTest {
     private static instance: TestCounter
 
     protected static async beforeEach() {
@@ -28,13 +25,9 @@ export default class CrossRepoTestCounterTest extends AbstractSpruceTest {
     protected static async throwsIfRepoNotFound() {
         const invalidPath = generateId()
 
-        const err = await assert.doesThrowAsync(async () => {
+        await assert.doesThrowAsync(async () => {
             await this.instance.countTestsIn([invalidPath])
-        })
-
-        errorAssert.assertError(err, 'REPO_NOT_FOUND', {
-            repoPath: invalidPath,
-        })
+        }, `Could not find repo ${invalidPath}!`)
     }
 
     @test()

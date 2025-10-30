@@ -1,4 +1,4 @@
-import { test } from '@sprucelabs/test-utils'
+import { test } from '@neurodevs/node-tdd'
 
 export default class ModuleWithThreeTests {
     @test()
